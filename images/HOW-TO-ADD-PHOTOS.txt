@@ -1,0 +1,8 @@
+Photos are optional — the site looks fine with none (the polaroid just hides).
+
+To add them later, drop image files into THIS folder:
+
+  meosha.jpg    -> shows in the polaroid on the first screen
+  date-bg.jpg   -> faint photo behind the final "It's a date" card
+
+Keep those exact names (.jpeg or .png also work for the first one).

@@ -1,0 +1,397 @@
+:root {
+  /* Warm dusk theme — rich but tasteful, one rose→amber accent */
+  --ink:        #f6f1ec;
+  --muted:      #c3b6bd;
+  --glass:      rgba(255, 255, 255, 0.06);
+  --glass-brd:  rgba(255, 255, 255, 0.14);
+  --rose:       #ff6b81;
+  --amber:      #ffac5e;
+  --accent-grad: linear-gradient(135deg, #ff6b81 0%, #ff9a5a 100%);
+  --radius:     22px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--ink);
+  background: #140f17;
+  min-height: 100vh;
+  min-height: 100dvh;          /* reliable on iOS Safari */
+  display: grid;
+  place-items: center;
+  padding:
+    calc(24px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right))
+    calc(24px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+  overflow-x: hidden;
+  overscroll-behavior: none;   /* stops pull-to-refresh while No dodges */
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;  /* removes 300ms tap delay, blocks double-tap zoom */
+}
+
+/* ----------------------------------------------------------------- */
+/* Ambient background                                                 */
+/* ----------------------------------------------------------------- */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 600px at 15% 0%,  #3a1d2c 0%, transparent 55%),
+    radial-gradient(900px 700px at 90% 100%, #2b1d33 0%, transparent 55%),
+    linear-gradient(160deg, #1b1320 0%, #140f17 60%, #120c14 100%);
+}
+.glow {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.4;
+  animation: drift 16s ease-in-out infinite alternate;
+}
+.glow--rose  { background: #ff4f74; top: -12vmax; left: -8vmax; }
+.glow--amber { background: #ff9a4d; bottom: -14vmax; right: -10vmax; animation-delay: -6s; }
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(4vmax, 3vmax) scale(1.12); }
+}
+
+/* Floating hearts (generated in JS) */
+.hearts { position: absolute; inset: 0; }
+.heart {
+  position: absolute;
+  bottom: -40px;
+  color: var(--rose);
+  filter: drop-shadow(0 0 6px rgba(255, 90, 120, 0.7));
+  opacity: 0;
+  animation: rise linear infinite;
+  will-change: transform, opacity;
+}
+@keyframes rise {
+  0%   { transform: translateY(0) rotate(0deg) scale(.9); opacity: 0; }
+  10%  { opacity: var(--peak, .55); }
+  90%  { opacity: var(--peak, .55); }
+  100% { transform: translateY(-112vh) translateX(var(--sway, 0)) rotate(20deg) scale(1.05); opacity: 0; }
+}
+
+/* Burst hearts on "Yes" */
+.burst-heart {
+  position: fixed;
+  z-index: 100;
+  color: var(--rose);
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(255, 90, 120, 0.9));
+  will-change: transform, opacity;
+}
+
+/* ----------------------------------------------------------------- */
+/* Card                                                               */
+/* ----------------------------------------------------------------- */
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  background: var(--glass);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--glass-brd);
+  border-radius: var(--radius);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 30px 28px 32px;
+  /* visible so the native iOS date picker isn't clipped by the card */
+  overflow: visible;
+}
+
+.step { display: none; }
+.step--active { display: block; }
+
+/* On the final step, the selfie fills the whole card — very faint */
+.card.is-date {
+  background:
+    linear-gradient(rgba(20, 15, 23, 0.90), rgba(20, 15, 23, 0.93)),
+    url("images/date-bg.jpg") center / cover no-repeat,
+    var(--glass);
+}
+
+.kicker {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+/* ----------------------------------------------------------------- */
+/* Photo                                                              */
+/* ----------------------------------------------------------------- */
+/* ---- Polaroid / printed film-photo look ---- */
+.photo {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: 88%;
+  margin: 4px auto 26px;
+  padding: 12px 12px 0;              /* white film border */
+  background: #fbf9f4;               /* warm photo-paper white */
+  border-radius: 3px;
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    0 16px 34px rgba(0, 0, 0, 0.5),
+    0 0 50px -16px rgba(255, 110, 140, 0.4);   /* faint rose glow on the wall */
+  transform: rotate(-2.2deg);       /* casually placed */
+  transition: transform .3s ease;
+}
+.photo:hover { transform: rotate(0deg); }
+
+.photo-window {
+  overflow: hidden;
+  background: #000;
+  line-height: 0;
+  border-radius: 1px;
+}
+.photo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 32vh;                  /* whole image shows, scaled to fit */
+  object-fit: contain;
+}
+.photo-caption {
+  font-family: 'Caveat', cursive;
+  font-size: 1.55rem;
+  line-height: 1;
+  color: #3a342c;
+  text-align: center;
+  padding: 10px 6px 14px;           /* the classic deep bottom border */
+}
+
+/* ----------------------------------------------------------------- */
+/* Type                                                               */
+/* ----------------------------------------------------------------- */
+.headline {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.7rem;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+}
+.sub { color: var(--muted); margin-top: 9px; font-size: 0.96rem; }
+.wink { opacity: 0.7; }
+
+.beat {
+  display: inline-block;
+  color: var(--rose);
+  filter: drop-shadow(0 0 8px rgba(255, 90, 120, 0.8));
+  animation: beat 1.1s ease-in-out infinite;
+}
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  15%      { transform: scale(1.25); }
+  30%      { transform: scale(1); }
+}
+
+/* ----------------------------------------------------------------- */
+/* Buttons                                                            */
+/* ----------------------------------------------------------------- */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  align-items: center;
+  position: relative;
+  min-height: 54px;
+}
+.btn-row--single { justify-content: flex-start; }
+.btn-row--stack { flex-direction: column; align-items: stretch; }
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 24px;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .12s ease, box-shadow .25s ease, background .25s ease;
+}
+.btn--yes {
+  background: var(--accent-grad);
+  color: #2a0f14;
+  box-shadow: 0 10px 30px rgba(255, 90, 120, 0.4);
+}
+.btn--yes:hover { box-shadow: 0 14px 40px rgba(255, 90, 120, 0.55); transform: translateY(-2px); }
+.btn--yes .spark { opacity: 0; transition: opacity .2s; }
+.btn--yes:hover .spark { opacity: 1; }
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink);
+  border: 1px solid var(--glass-brd);
+}
+.btn--ghost:hover { background: rgba(255, 255, 255, 0.1); }
+
+.btn--no {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  border: 1px solid var(--glass-brd);
+}
+/* Back / change-answer button */
+.btn--back {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--glass-brd);
+  font-weight: 500;
+  padding: 13px 18px;
+}
+.btn--back:hover { background: rgba(255, 255, 255, 0.06); color: var(--ink); }
+.btn-row--nav { justify-content: space-between; }
+
+/* subtle inline "change an answer" link on the final step */
+.link-back {
+  display: block;
+  margin: 16px auto 4px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.link-back:hover { color: var(--ink); }
+/* Once it gets big, Yes pops to the centre of the screen and grows from there,
+   so the word "Yes" is always centred and on-screen no matter how huge it gets. */
+.btn--escaped {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 200;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------- */
+/* Fields                                                            */
+/* ----------------------------------------------------------------- */
+.field {
+  width: 100%;
+  min-height: 54px;            /* steady height + comfy tap target on iOS */
+  margin-top: 18px;
+  padding: 15px 16px;
+  font: inherit;
+  font-size: 16px;   /* keep >=16px so iOS Safari doesn't zoom on focus */
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-brd);
+  border-radius: 13px;
+  outline: none;
+  transition: border .2s, background .2s;
+}
+/* iOS renders date inputs oddly; normalise alignment so the value sits centred */
+input[type="date"].field {
+  -webkit-appearance: none;
+  appearance: none;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+.field::-webkit-date-and-time-value { text-align: left; }
+.field::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .7; cursor: pointer; }
+.field:focus { border-color: var(--rose); background: rgba(255, 255, 255, 0.09); }
+.field--hidden { display: none; }
+
+/* ----------------------------------------------------------------- */
+/* Choices                                                           */
+/* ----------------------------------------------------------------- */
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+.choice {
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+  padding: 18px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-brd);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  transition: border .15s, background .15s, transform .12s, box-shadow .25s;
+}
+.choice .emoji { font-size: 1.5rem; }
+.choice:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.08); }
+.choice--selected {
+  border-color: var(--rose);
+  background: rgba(255, 90, 120, 0.14);
+  box-shadow: 0 8px 26px rgba(255, 90, 120, 0.28);
+}
+
+/* ----------------------------------------------------------------- */
+/* Summary                                                           */
+/* ----------------------------------------------------------------- */
+.summary {
+  margin-top: 20px;
+  padding: 22px 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-brd);
+  border-radius: 16px;
+  line-height: 1.9;
+  font-size: 1.04rem;
+}
+.summary b { font-weight: 600; color: #fff; }
+.summary .lbl { color: var(--rose); }
+
+.copied {
+  text-align: center;
+  color: var(--rose);
+  font-size: 0.9rem;
+  margin-top: 14px;
+  min-height: 18px;
+  font-weight: 500;
+  white-space: pre-line;
+}
+
+/* ----------------------------------------------------------------- */
+/* Phone screens                                                      */
+/* ----------------------------------------------------------------- */
+@media (max-width: 460px) {
+  .card { padding: 24px 20px 26px; border-radius: 20px; }
+  .headline { font-size: 1.5rem; }
+  .photo { margin-bottom: 18px; }
+  .photo img { max-height: 30vh; }
+  .photo-caption { font-size: 1.4rem; }
+  .btn { padding: 16px 22px; }          /* comfy thumb target */
+  .choice { padding: 16px 10px; }
+  .choice .emoji { font-size: 1.4rem; }
+}
+
+/* Hide the heavy backdrop blur on very small / low-power devices is unnecessary;
+   iOS handles it, but cap glow cost a touch on phones. */
+@media (max-width: 460px) {
+  .glow { filter: blur(70px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow, .heart, .beat { animation: none !important; }
+}

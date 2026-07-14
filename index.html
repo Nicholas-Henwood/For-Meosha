@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#140f17" />
+  <title>Hey Meosha…</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ambient background -->
+  <div class="bg">
+    <span class="glow glow--rose"></span>
+    <span class="glow glow--amber"></span>
+    <div class="hearts" id="hearts" aria-hidden="true"></div>
+  </div>
+
+  <main class="card" id="card">
+
+    <!-- STEP 1 — The question -->
+    <section class="step step--active" data-step="ask">
+      <figure class="photo">
+        <div class="photo-window">
+          <img id="usPhoto" src="images/meosha.jpg" alt="Us" />
+        </div>
+        <figcaption class="photo-caption">us &#10084;</figcaption>
+      </figure>
+      <h1 class="headline">Meosha, will you go on a date with me?</h1>
+      <p class="sub">No pressure. <span class="wink">(okay, a little pressure)</span></p>
+      <div class="btn-row" id="askRow">
+        <button class="btn btn--yes" id="yesBtn"><span>Yes</span><span class="spark">♥</span></button>
+        <button class="btn btn--no" id="noBtn">No</button>
+      </div>
+    </section>
+
+    <!-- STEP 2 — Pick a date -->
+    <section class="step" data-step="date">
+      <span class="kicker">step 1 of 3</span>
+      <h2 class="headline">Yes! Now pick a day</h2>
+      <p class="sub">When works for you?</p>
+      <input type="date" id="dateInput" class="field" />
+      <div class="btn-row btn-row--single">
+        <button class="btn btn--yes" data-next="activity" data-require="date"><span>Next</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 3 — Pick an activity -->
+    <section class="step" data-step="activity">
+      <span class="kicker">step 2 of 3</span>
+      <h2 class="headline">What sounds fun?</h2>
+      <p class="sub">Pick one.</p>
+      <div class="choice-grid" id="activityGrid">
+        <button class="choice" data-value="Arcade"><span class="emoji">🕹️</span> Arcade</button>
+        <button class="choice" data-value="Mini golf"><span class="emoji">⛳</span> Mini golf</button>
+        <button class="choice" data-value="Bowling"><span class="emoji">🎳</span> Bowling</button>
+        <button class="choice choice--other" data-value="__other__"><span class="emoji">✨</span> Something else</button>
+      </div>
+      <input type="text" id="activityOther" class="field field--hidden" placeholder="What would you like to do?" />
+      <div class="btn-row btn-row--nav">
+        <button class="btn btn--back" data-back="date" type="button">&#8592; Back</button>
+        <button class="btn btn--yes" data-next="food" data-require="activity"><span>Next</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 4 — Pick food -->
+    <section class="step" data-step="food">
+      <span class="kicker">step 3 of 3</span>
+      <h2 class="headline">And to eat?</h2>
+      <p class="sub">Pick one.</p>
+      <div class="choice-grid" id="foodGrid">
+        <button class="choice" data-value="Sushi"><span class="emoji">🍣</span> Sushi</button>
+        <button class="choice" data-value="Burgers"><span class="emoji">🍔</span> Burgers</button>
+        <button class="choice" data-value="Pizza"><span class="emoji">🍕</span> Pizza</button>
+        <button class="choice choice--other" data-value="__other__"><span class="emoji">✨</span> Something else</button>
+      </div>
+      <input type="text" id="foodOther" class="field field--hidden" placeholder="What are you craving?" />
+      <div class="btn-row btn-row--nav">
+        <button class="btn btn--back" data-back="activity" type="button">&#8592; Back</button>
+        <button class="btn btn--yes" data-next="done" data-require="food"><span>See the plan</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 5 — Summary -->
+    <section class="step" data-step="done">
+      <h2 class="headline">It's a date <span class="beat">♥</span></h2>
+      <p class="sub">Here's the plan — send it to me so I don't forget a thing.</p>
+      <div class="summary" id="summary"></div>
+      <button class="link-back" data-back="food" type="button">&#8592; Change an answer</button>
+      <div class="btn-row btn-row--stack">
+        <button class="btn btn--yes" id="whatsappBtn" type="button"><span>Send it to me on WhatsApp</span></button>
+        <button class="btn btn--ghost" id="copyBtn" type="button">Copy the plan</button>
+      </div>
+      <p class="copied" id="copiedMsg"></p>
+    </section>
+
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
