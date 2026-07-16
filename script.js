@@ -242,12 +242,12 @@ function buildSummary() {
     `📅 <span class="lbl">When</span> &nbsp;<b>${prettyDate(plan.date)}</b><br>` +
     `🎯 <span class="lbl">Doing</span> &nbsp;<b>${plan.activity}</b><br>` +
     `🍽️ <span class="lbl">Eating</span> &nbsp;<b>${plan.food}</b>`;
-}
 
-document.getElementById("whatsappBtn").addEventListener("click", () => {
-  const url = `https://wa.me/${MY_WHATSAPP}?text=${encodeURIComponent(messageText())}`;
-  window.open(url, "_blank");
-});
+  // Set the WhatsApp link as a real deep-link (works even if she hasn't saved
+  // the number). An <a href> launches the app far more reliably than window.open.
+  document.getElementById("whatsappBtn").href =
+    `https://wa.me/${MY_WHATSAPP}?text=${encodeURIComponent(messageText())}`;
+}
 
 document.getElementById("copyBtn").addEventListener("click", async () => {
   const msg = document.getElementById("copiedMsg");

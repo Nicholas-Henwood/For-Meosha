@@ -225,6 +225,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  text-decoration: none;   /* the WhatsApp button is now an <a> */
   transition: transform .12s ease, box-shadow .25s ease, background .25s ease;
 }
 .btn--yes {
