@@ -4,6 +4,11 @@
    e.g. South Africa 082 123 4567  ->  "27821234567"
    ========================================================================= */
 const MY_WHATSAPP = "27745649182";
+
+/* Auto-email delivery via Web3Forms — this key is safe to be public; your
+   email address is NOT in the code, it's linked to the key on Web3Forms' side. */
+const W3F_ACCESS_KEY = "7a72e783-27fd-4f4b-b787-cc1d9fb30cc1";
+const HER_NAME = "Meosha";
 /* ========================================================================= */
 
 /* ---- Motion (vanilla sibling of Framer Motion). Falls back to native. ---- */
@@ -74,7 +79,7 @@ function goTo(name) {
   animate(next, { opacity: [0, 1], transform: ["translateY(14px)", "translateY(0px)"] },
           { duration: 0.5, easing: [0.22, 1, 0.36, 1] });
   document.getElementById("card").classList.toggle("is-date", name === "done");
-  if (name === "done") { buildSummary(); celebrate(); }
+  if (name === "done") { buildSummary(); celebrate(); sendPlanEmail(); }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -247,6 +252,32 @@ function buildSummary() {
   // the number). An <a href> launches the app far more reliably than window.open.
   document.getElementById("whatsappBtn").href =
     `https://wa.me/${MY_WHATSAPP}?text=${encodeURIComponent(messageText())}`;
+}
+
+/* Silently email you the answers when she reaches the final screen, so you get
+   them even if she never taps send. Resends only if she changed something. */
+let _lastEmailed = "";
+async function sendPlanEmail() {
+  if (!plan.date || !plan.activity || !plan.food) return;
+  const payload = JSON.stringify(plan);
+  if (payload === _lastEmailed) return;       // nothing changed — don't resend
+  _lastEmailed = payload;
+  try {
+    await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: W3F_ACCESS_KEY,
+        subject: `${HER_NAME} said YES to your date! 💛`,
+        from_name: "Date site",
+        Who: HER_NAME,
+        When: prettyDate(plan.date),
+        Doing: plan.activity,
+        Eating: plan.food,
+        message: messageText(),
+      }),
+    });
+  } catch (e) { /* ignore — WhatsApp / Copy remain as the fallback */ }
 }
 
 document.getElementById("copyBtn").addEventListener("click", async () => {
